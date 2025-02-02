@@ -1,12 +1,14 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../shared/Navbar/Navbar";
 import { useContext } from "react";
 import { AuthContext } from "../../providers/AuthProvider";
+import { updateProfile } from "firebase/auth";
 
 
 const Register = () => {
 
- const {createUser} = useContext(AuthContext);
+ const {createUser,updateUserProfile} = useContext(AuthContext);
+  const navigate = useNavigate();
 
 
 
@@ -22,7 +24,13 @@ const Register = () => {
 
         createUser(email,password)
         .then(res =>{
-          console.log(res);
+          updateUserProfile({ displayName: name, photoURL: photo}).then(
+            ()=> {
+              navigate("/");
+            }
+          ).catch(err=>{
+            console.log(err);
+          })
         })
         .catch(err =>{
           console.log(err);
